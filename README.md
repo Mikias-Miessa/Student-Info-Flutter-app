@@ -1,16 +1,9 @@
-# student_info
+# Student Info
 
-A new Flutter project.
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is all about building a Flutter app that helps parents to see their children's school performance and communicate with the school is an exciting venture that can greatly benefit parents and educators alike. With this app, parents can view their children's grades, attendance records, and progress reports, providing them with real-time information about their child's academic performance. Additionally, the app can facilitate communication between parents and teachers, allowing them to exchange information about their child's academic and behavioral progress. The app can also include features such as push notifications for important events, reminders for upcoming assignments or exams, and a messaging system to help parents stay connected with their child's school. Overall, the app has the potential to enhance parent involvement in their child's education and create a more collaborative and supportive learning environment.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
