@@ -37,7 +37,7 @@ class _ExamResultState extends State<ExamResult> {
   void getResult() async {
     try {
       var currentUser = await userinfo.readUserData();
-      Uri url = Uri.parse(API.ExamResult);
+      Uri url = Uri.parse(API.examResult);
       http.Response response = await http.post(url, body: {
         'Subject': _dropdownValue,
         'Type': _dropdownValue2,

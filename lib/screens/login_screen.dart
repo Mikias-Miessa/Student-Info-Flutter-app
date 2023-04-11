@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           setState(() {
             _saving = false;
-            errorMessage = 'Check your username and password';
+            errorMessage = data;
           });
           username = '';
           password = '';

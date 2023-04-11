@@ -34,7 +34,7 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
       _saving = true;
     });
     var currentUser = await userinfo.readUserData();
-    Uri url = Uri.parse(API.ReportCard);
+    Uri url = Uri.parse(API.reportCard);
     http.Response response = await http.post(url, body: {'User': currentUser});
     if (response.statusCode == 200 || response.statusCode == 201) {
       data = jsonDecode(response.body);
