@@ -22,6 +22,7 @@ class ReportCardScreen extends StatefulWidget {
 class _ReportCardScreenState extends State<ReportCardScreen> {
   List<dynamic>? data;
   bool _saving = false;
+  String? Name;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,16 +36,27 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
     });
     var currentUser = await userinfo.readUserData();
     Uri url = Uri.parse(API.reportCard);
-    http.Response response = await http.post(url, body: {'User': currentUser});
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      data = jsonDecode(response.body);
+    try {
+      http.Response response =
+          await http.post(url, body: {'User': currentUser});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        data = jsonDecode(response.body);
+        print(data);
+        setState(() {
+          _saving = false;
+        });
+      }
+      setState(() {
+        var lodedData = data;
+
+        Name = data![2][0]['F_Name'];
+      });
+    } catch (e) {
       setState(() {
         _saving = false;
       });
+      print(e);
     }
-    setState(() {
-      var lodedData = data;
-    });
   }
 
   @override
@@ -53,7 +65,7 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
       drawer: NavDrawer(),
       // backgroundColor: Colors.orange,
       appBar: AppBar(
-        title: Text('Exam Result'),
+        title: Text('Report Card'),
         backgroundColor: Color(0xffffa500),
         actions: <Widget>[
           IconButton(
@@ -72,10 +84,47 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
         inAsyncCall: _saving,
         child: Column(
           children: [
-            Text('$data'.toString()),
+            // Text('$data'.toString()),
+            Container(
+              height: 60,
+              child: Center(
+                child: Text('$Name'),
+              ),
+              decoration: BoxDecoration(color: Colors.blue.shade400),
+            ),
+
+            Table(
+              border: TableBorder.all(color: Colors.blue, width: 3),
+              columnWidths: {
+                0: FractionColumnWidth(0.5),
+                1: FractionColumnWidth(0.25),
+                2: FractionColumnWidth(0.25)
+              },
+              children: [
+                buildrow(['cell1', 'cell2', 'cell3'], isHeader: true),
+                buildrow(['cell1', 'cell2', 'cell3']),
+                buildrow(['cell1', 'cell2', 'cell3'])
+              ],
+            )
           ],
         ),
       ),
     );
   }
+
+  TableRow buildrow(List<String> cells, {bool isHeader = false}) => TableRow(
+          children: cells.map((cell) {
+        final style = TextStyle(
+            fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+            fontSize: 18);
+
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+              child: Text(
+            cell,
+            style: style,
+          )),
+        );
+      }).toList());
 }

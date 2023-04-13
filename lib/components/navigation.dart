@@ -40,18 +40,22 @@ class _NavDrawerState extends State<NavDrawer> {
   void getCurrentUser() async {
     user = await userinfo.readUserData();
     Uri url = Uri.parse(API.studentInfo);
-    http.Response response = await http.post(url, body: {'user': user});
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      try {
-        List<dynamic> data = jsonDecode(response.body);
-        print(data);
-        setState(() {
-          firstName = data[0]['F_Name'];
-          fatherName = data[0]['Father_Name'];
-        });
-      } catch (e) {
-        print(e);
+    try {
+      http.Response response = await http.post(url, body: {'user': user});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          List<dynamic> data = jsonDecode(response.body);
+          print(data);
+          setState(() {
+            firstName = data[0]['F_Name'];
+            fatherName = data[0]['Father_Name'];
+          });
+        } catch (e) {
+          print(e);
+        }
       }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -60,11 +64,6 @@ class _NavDrawerState extends State<NavDrawer> {
     return Drawer(
       child: ListView(
         children: [
-          // UserAccountsDrawerHeader(
-          //   accountName: Center(child: Text('$firstName $fatherName')),
-          //   accountEmail: Center(child: Text('$firstName $fatherName')),
-          //   decoration: BoxDecoration(color: Colors.orange.shade400),
-          // ),
           Container(
             height: 150,
             decoration: BoxDecoration(color: Colors.orange.shade400),
