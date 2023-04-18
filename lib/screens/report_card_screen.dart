@@ -24,8 +24,11 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
   bool _saving = false;
   String? FName;
   String? FatherName;
-  List Subject = [];
-  List Result = [];
+  String? AcademicYear;
+  List Subject1ST = [];
+  List Result1ST = [];
+  // List Subject2nd = [];
+  List Result2nd = [];
   List<dynamic> data = [];
   @override
   void initState() {
@@ -47,24 +50,30 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
         data = jsonDecode(response.body);
         print(data);
 
-        for (int j = 0; j < 3; j++) {
+        // for first semester
+        int length1st = data[0].length;
+        for (int j = 0; j < length1st; j++) {
           String newSubject = data[0][j]['Subject'];
           String newResult = data[0][j]['Result'];
-          Subject.add(newSubject);
-          Result.add(newResult);
+          Subject1ST.add(newSubject);
+          Result1ST.add(newResult);
         }
 
-        for (int i = 0; i < data.length; i++) {}
+        // for second semester
+        int length2nd = data[1].length;
+        for (int j = 0; j < length1st; j++) {
+          // String newSubject = data[1][j]['Subject'];
+          String newResult = data[1][j]['Result'];
+          // Subject2nd.add(newSubject);
+          Result2nd.add(newResult);
+        }
         setState(() {
           _saving = false;
+          FName = data[2][0]['F_Name'];
+          FatherName = data[2][0]['Father_Name'];
+          AcademicYear = data[2][0]['Academy_Year'];
         });
       }
-      setState(() {
-        var lodedData = data;
-
-        FName = data[2][0]['F_Name'];
-        FatherName = data[2][0]['Father_Name'];
-      });
     } catch (e) {
       setState(() {
         _saving = false;
@@ -206,7 +215,7 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
             ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: Subject.length,
+                itemCount: Subject1ST.length,
                 itemBuilder: (context, index) {
                   return Table(
                     border: TableBorder.all(color: Colors.blue, width: 3),
@@ -216,7 +225,12 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
                     //   2: FractionColumnWidth(0.33)
                     // },
                     children: [
-                      buildrow(Subject[index], Result[index], 'cell3'),
+                      buildrow(
+                          Subject1ST[index],
+                          Result1ST[index],
+                          Result2nd.length >= Result1ST.length
+                              ? Result2nd[index]
+                              : ""),
                       // buildrow(['cell1', 'cell2', 'cell3'])
                     ],
                   );
