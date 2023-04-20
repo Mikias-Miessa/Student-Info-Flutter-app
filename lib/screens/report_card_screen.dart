@@ -8,6 +8,8 @@ import '../components/navigation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../components/card.dart';
+import '../components/result_table_row.dart';
 
 final storage = FlutterSecureStorage();
 final userinfo = LocalStorage(storage: storage);
@@ -22,19 +24,27 @@ class ReportCardScreen extends StatefulWidget {
 class _ReportCardScreenState extends State<ReportCardScreen> {
   // List<dynamic>? data;
   bool _saving = false;
-  String? FName;
-  String? FatherName;
-  String? AcademicYear;
-  List Subject1ST = [];
-  List Result1ST = [];
+  String? fname;
+  String? fatherName;
+  String? academicYear;
+  String totalFirst = '0';
+  String averageFirst = '0';
+  String rankFirst = '0';
+  String totalSecond = '0';
+  String averageSecond = '0';
+  String rankSecond = '0';
+  List subject1st = [];
+  List result1st = [];
+
   // List Subject2nd = [];
-  List Result2nd = [];
+  List result2nd = [];
   List<dynamic> data = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getReportCard();
+    getCurrentUser();
   }
 
   void getReportCard() async {
@@ -55,23 +65,26 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
         for (int j = 0; j < length1st; j++) {
           String newSubject = data[0][j]['Subject'];
           String newResult = data[0][j]['Result'];
-          Subject1ST.add(newSubject);
-          Result1ST.add(newResult);
+          subject1st.add(newSubject);
+          result1st.add(newResult);
         }
 
         // for second semester
         int length2nd = data[1].length;
-        for (int j = 0; j < length1st; j++) {
+        for (int j = 0; j < length2nd; j++) {
           // String newSubject = data[1][j]['Subject'];
           String newResult = data[1][j]['Result'];
           // Subject2nd.add(newSubject);
-          Result2nd.add(newResult);
+          result2nd.add(newResult);
         }
         setState(() {
           _saving = false;
-          FName = data[2][0]['F_Name'];
-          FatherName = data[2][0]['Father_Name'];
-          AcademicYear = data[2][0]['Academy_Year'];
+          totalFirst = data[2][0]['Total'];
+          averageFirst = data[2][0]['Average'];
+          rankFirst = data[2][0]['Rank'];
+          totalSecond = data[3][0]['Total'];
+          averageSecond = data[3][0]['Average'];
+          rankSecond = data[3][0]['Rank'];
         });
       }
     } catch (e) {
@@ -82,13 +95,41 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
     }
   }
 
+  void getCurrentUser() async {
+    setState(() {
+      _saving = true;
+    });
+    var user = await userinfo.readUserData();
+    Uri url = Uri.parse(API.studentInfo);
+    try {
+      http.Response response = await http.post(url, body: {'user': user});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          List<dynamic> data = jsonDecode(response.body);
+          print(data);
+          setState(() {
+            _saving = false;
+            fname = data[0]['F_Name'];
+            fatherName = data[0]['Father_Name'];
+            academicYear = data[0]['Regfor'];
+          });
+        } catch (e) {
+          _saving = false;
+          print(e);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(),
       // backgroundColor: Colors.orange,
       appBar: AppBar(
-        title: Text('Report Card'),
+        title: const Text('Report Card'),
         backgroundColor: Color(0xffffa500),
         actions: <Widget>[
           IconButton(
@@ -105,10 +146,8 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
       ),
       body: ModalProgressHUD(
         inAsyncCall: _saving,
-        child: Column(
+        child: ListView(
           children: [
-            // Text('$data'.toString()),
-
             Container(
               height: 48,
               decoration: BoxDecoration(
@@ -128,6 +167,7 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
                     )
                   ]),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0),
@@ -143,7 +183,30 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          '$FName $FatherName',
+                          '$fname $fatherName',
+                          style: TextStyle(
+                              color: Color(0xff1f75fe),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Academic Year',
+                          style: TextStyle(
+                              color: Color(0xffffa500),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          '$academicYear',
                           style: TextStyle(
                               color: Color(0xff1f75fe),
                               fontSize: 16,
@@ -158,83 +221,43 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              height: 48,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(7),
-                      topRight: Radius.circular(7),
-                      bottomLeft: Radius.circular(7),
-                      bottomRight: Radius.circular(7)),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 8,
-                      blurStyle: BlurStyle.outer,
-                      color: Colors.grey,
-                      // spreadRadius: 3,
-                      offset: Offset(2, 2),
-                    )
-                  ]),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Subject',
-                      style: TextStyle(
-                          color: Color(0xffffa500),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 70),
-                    child: Text(
-                      '1st Semister',
-                      style: TextStyle(
-                          color: Color(0xffffa500),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 35.0),
-                    child: Text(
-                      '2nd Semester',
-                      style: TextStyle(
-                          color: Color(0xffffa500),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ThreeInputCard(
+                text1: 'Subject', text2: '1st Semester', text3: '2nd Semester'),
             ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: Subject1ST.length,
+                itemCount: subject1st.length,
                 itemBuilder: (context, index) {
                   return Table(
                     border: TableBorder.all(color: Colors.blue, width: 3),
-                    // columnWidths: {
-                    //   0: FractionColumnWidth(0.33),
-                    //   1: FractionColumnWidth(0.33),
-                    //   2: FractionColumnWidth(0.33)
-                    // },
                     children: [
                       buildrow(
-                          Subject1ST[index],
-                          Result1ST[index],
-                          Result2nd.length >= Result1ST.length
-                              ? Result2nd[index]
+                          subject1st[index],
+                          result1st[index],
+                          result2nd.length >= result1st.length
+                              ? result2nd[index]
                               : ""),
-                      // buildrow(['cell1', 'cell2', 'cell3'])
                     ],
                   );
                 }),
+            ResultTable(
+              style: style,
+              cell1: 'Total',
+              cell2: '$totalFirst',
+              cell3: '$totalSecond',
+            ),
+            ResultTable(
+              style: style,
+              cell1: 'Average',
+              cell2: '$averageFirst',
+              cell3: '$averageSecond',
+            ),
+            ResultTable(
+              style: style,
+              cell1: 'Rank',
+              cell2: '$rankFirst',
+              cell3: '$rankSecond',
+            ),
           ],
         ),
       ),
@@ -275,42 +298,44 @@ class _ReportCardScreenState extends State<ReportCardScreen> {
       fontSize: 18, color: Color(0xff1f75fe), fontWeight: FontWeight.w600);
 }
 
-class Buildrow extends StatelessWidget {
-  String? subject;
-  String? result1;
-  String? result2;
-  Buildrow(
-      {required this.subject, required this.result1, required this.result2});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            'Subject',
-            style: TextStyle(
-                color: Color(0xffffa500),
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
-          ),
-          Text(
-            '1st Semister',
-            style: TextStyle(
-                color: Color(0xffffa500),
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
-          ),
-          Text(
-            '2nd Semester',
-            style: TextStyle(
-                color: Color(0xffffa500),
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
-}
+
+// class Buildrow extends StatelessWidget {
+//   String? subject;
+//   String? result1;
+//   String? result2;
+//   Buildrow(
+//       {required this.subject, required this.result1, required this.result2});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         children: [
+//           Text(
+//             'Subject',
+//             style: TextStyle(
+//                 color: Color(0xffffa500),
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w600),
+//           ),
+//           Text(
+//             '1st Semister',
+//             style: TextStyle(
+//                 color: Color(0xffffa500),
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w600),
+//           ),
+//           Text(
+//             '2nd Semester',
+//             style: TextStyle(
+//                 color: Color(0xffffa500),
+//                 fontSize: 18,
+//                 fontWeight: FontWeight.w600),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
