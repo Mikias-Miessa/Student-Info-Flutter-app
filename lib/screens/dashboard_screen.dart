@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/local_storage_data.dart';
 import '../components/navigation.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shimmer/shimmer.dart';
 
 final storage = FlutterSecureStorage();
 final userinfo = LocalStorage(storage: storage);
@@ -95,101 +96,114 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: _saving,
-        child: Column(
-          children: [
-            Flexible(
-              child: Container(
-                // color: Colors.orange,
-                height: 200,
-                child: Image.asset('images/Welcome.png'),
-              ),
+      body: Column(
+        children: [
+          Flexible(
+            child: Container(
+              // color: Colors.orange,
+              height: 200,
+              child: Image.asset('images/Welcome.png'),
             ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                // height: 280,
-                decoration: BoxDecoration(
-                    color: Color(0xff1f75fe),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(33),
-                        topRight: Radius.circular(33)),
-                    boxShadow: [
-                      BoxShadow(
-                        // offset: Offset.infinite,
-                        blurRadius: 2,
-                        blurStyle: BlurStyle.outer,
-                        color: Colors.grey,
-                      )
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Container(
-                    // height: 270,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xffffa500), Color(0xffffffff)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              // height: 280,
+              decoration: BoxDecoration(
+                  color: Color(0xff1f75fe),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(33),
+                      topRight: Radius.circular(33)),
+                  boxShadow: [
+                    BoxShadow(
+                      // offset: Offset.infinite,
+                      blurRadius: 2,
+                      blurStyle: BlurStyle.outer,
+                      color: Colors.grey,
+                    )
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Container(
+                  // height: 270,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xffffa500), Color(0xffffffff)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30))),
+                  child: ListView(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          // top: 50,
+                          right: 40,
+                          left: 40,
                         ),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30))),
-                    child: ListView(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            // top: 50,
-                            right: 40,
-                            left: 40,
-                          ),
-                          child: Container(
-                            height: 48,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(7),
-                                    topRight: Radius.circular(7),
-                                    bottomLeft: Radius.circular(7),
-                                    bottomRight: Radius.circular(7)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 8,
-                                    blurStyle: BlurStyle.outer,
-                                    color: Colors.grey,
-                                    // spreadRadius: 3,
-                                    offset: Offset(2, 2),
-                                  )
-                                ]),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
-                                    right: 30,
-                                  ),
-                                  child: Icon(
-                                    Icons.account_circle_outlined,
-                                    color: Color(0xffffa500),
-                                    size: 30,
-                                  ),
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(7),
+                                  topRight: Radius.circular(7),
+                                  bottomLeft: Radius.circular(7),
+                                  bottomRight: Radius.circular(7)),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 8,
+                                  blurStyle: BlurStyle.outer,
+                                  color: Colors.grey,
+                                  // spreadRadius: 3,
+                                  offset: Offset(2, 2),
+                                )
+                              ]),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 30,
                                 ),
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Student Name',
-                                      style: TextStyle(
-                                          color: Color(0xffffa500),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
+                                child: Icon(
+                                  Icons.account_circle_outlined,
+                                  color: Color(0xffffa500),
+                                  size: 30,
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Student Name',
+                                    style: TextStyle(
+                                        color: Color(0xffffa500),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  if (_saving)
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            10), // Set your desired border radius here
+                                        child: Container(
+                                          width: 150,
+                                          height: 22,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  else
                                     Text(
                                       '$firstName $fatherName $gFatherName',
                                       style: TextStyle(
@@ -197,23 +211,101 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500),
                                     )
-                                  ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          // top: 50,
+                          right: 40,
+                          left: 40,
+                        ),
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(7),
+                                  topRight: Radius.circular(7),
+                                  bottomLeft: Radius.circular(7),
+                                  bottomRight: Radius.circular(7)),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 8,
+                                  blurStyle: BlurStyle.outer,
+                                  color: Colors.grey,
+                                  // spreadRadius: 3,
+                                  offset: Offset(2, 2),
+                                )
+                              ]),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 30,
                                 ),
-                              ],
-                            ),
+                                child: Icon(
+                                  Icons.class_outlined,
+                                  color: Color(0xffffa500),
+                                  size: 30,
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Grade & Section',
+                                    style: TextStyle(
+                                        color: Color(0xffffa500),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  if (_saving)
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            10), // Set your desired border radius here
+                                        child: Container(
+                                          width: 150,
+                                          height: 22,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    Text(
+                                      '$grade $section',
+                                      style: TextStyle(
+                                          color: Color(0xff1f75fe),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    )
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            // top: 50,
-                            right: 40,
-                            left: 40,
-                          ),
-                          child: Container(
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
                             height: 48,
+                            width: 146,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
@@ -238,7 +330,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     right: 30,
                                   ),
                                   child: Icon(
-                                    Icons.class_outlined,
+                                    Icons.edit_calendar_outlined,
                                     color: Color(0xffffa500),
                                     size: 30,
                                   ),
@@ -249,76 +341,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Grade & Section',
+                                      'Age',
                                       style: TextStyle(
                                           color: Color(0xffffa500),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    Text(
-                                      '$grade $section',
-                                      style: TextStyle(
-                                          color: Color(0xff1f75fe),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              height: 48,
-                              width: 146,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(7),
-                                      topRight: Radius.circular(7),
-                                      bottomLeft: Radius.circular(7),
-                                      bottomRight: Radius.circular(7)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 8,
-                                      blurStyle: BlurStyle.outer,
-                                      color: Colors.grey,
-                                      // spreadRadius: 3,
-                                      offset: Offset(2, 2),
-                                    )
-                                  ]),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 30,
-                                    ),
-                                    child: Icon(
-                                      Icons.edit_calendar_outlined,
-                                      color: Color(0xffffa500),
-                                      size: 30,
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Age',
-                                        style: TextStyle(
-                                            color: Color(0xffffa500),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
+                                    if (_saving)
+                                      Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10), // Set your desired border radius here
+                                          child: Container(
+                                            width: 30,
+                                            height: 22,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    else
                                       Text(
                                         '$age',
                                         style: TextStyle(
@@ -326,56 +369,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       )
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Container(
-                              height: 48,
-                              width: 146,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(7),
-                                      topRight: Radius.circular(7),
-                                      bottomLeft: Radius.circular(7),
-                                      bottomRight: Radius.circular(7)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 8,
-                                      blurStyle: BlurStyle.outer,
-                                      color: Colors.grey,
-                                      // spreadRadius: 3,
-                                      offset: Offset(2, 2),
-                                    )
-                                  ]),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 14,
-                                      right: 14,
-                                    ),
-                                    child: Icon(
-                                      Icons.check_circle_outline_outlined,
-                                      color: Color(0xffffa500),
-                                      size: 30,
-                                    ),
+                          ),
+                          Container(
+                            height: 48,
+                            width: 146,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(7),
+                                    topRight: Radius.circular(7),
+                                    bottomLeft: Radius.circular(7),
+                                    bottomRight: Radius.circular(7)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 8,
+                                    blurStyle: BlurStyle.outer,
+                                    color: Colors.grey,
+                                    // spreadRadius: 3,
+                                    offset: Offset(2, 2),
+                                  )
+                                ]),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 14,
+                                    right: 14,
                                   ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Status',
-                                        style: TextStyle(
-                                            color: Color(0xffffa500),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
+                                  child: Icon(
+                                    Icons.check_circle_outline_outlined,
+                                    color: Color(0xffffa500),
+                                    size: 30,
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Status',
+                                      style: TextStyle(
+                                          color: Color(0xffffa500),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    if (_saving)
+                                      Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10), // Set your desired border radius here
+                                          child: Container(
+                                            width: 30,
+                                            height: 22,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    else
                                       Text(
                                         '$status',
                                         style: TextStyle(
@@ -383,34 +440,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Center(
-                          child: Text(
-                            'Made by Visionaries ICT Solutions PLC',
-                            style: TextStyle(
-                              color: Color(0xff1f75fe),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Center(
+                        child: Text(
+                          'Made by Visionaries ICT Solutions PLC',
+                          style: TextStyle(
+                            color: Color(0xff1f75fe),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

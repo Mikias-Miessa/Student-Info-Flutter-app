@@ -10,6 +10,7 @@ import '../services/local_storage_data.dart';
 import '../services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 final storage = FlutterSecureStorage();
 final userinfo = LocalStorage(storage: storage);
@@ -81,10 +82,7 @@ class _NavDrawerState extends State<NavDrawer> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 40, left: 20),
-                child: Text(
-                  'Logged in as : $firstName $fatherName',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
-                ),
+                child: _buildUserInformation(),
               )
             ]),
           ),
@@ -222,5 +220,31 @@ class _NavDrawerState extends State<NavDrawer> {
         ],
       ),
     );
+  }
+
+  // Helper method to build user information with shimmer effect
+  Widget _buildUserInformation() {
+    if (firstName == null || fatherName == null) {
+      // Shimmer effect when data is loading
+      return Shimmer.fromColors(
+        baseColor: Color.fromARGB(162, 224, 224, 224)!,
+        highlightColor: Color.fromARGB(194, 245, 245, 245)!,
+        child: ClipRRect(
+          borderRadius:
+              BorderRadius.circular(10), // Set your desired border radius here
+          child: Container(
+            width: 150,
+            height: 22,
+            color: Colors.white,
+          ),
+        ),
+      );
+    } else {
+      // Actual user information when data is available
+      return Text(
+        'Logged in as: $firstName $fatherName',
+        style: TextStyle(color: Colors.white, fontSize: 15),
+      );
+    }
   }
 }
